@@ -1,0 +1,21 @@
+Ticker,Nome da Empresa,Preço,Change,Volume,Market Cap
+NVDA,NVIDIA Corporation,125.20,+4.29,469.205M,3.08T
+AAPL,Apple Inc.,213.07,+5.92,62.597M,3.267T
+GME,GameStop Corp.,25.46,-5.03,40.205M,8.942B
+TSLA,"Tesla, Inc.",177.29,+6.63,89.99M,565.413B
+NIO,NIO Inc.,4.4500,-0.0100,55.346M,10.197B
+SOFI,"SoFi Technologies, Inc.",7.07,+0.07,41.186M,7.501B
+MARA,"Marathon Digital Holdings, Inc.",20.31,+0.48,47.873M,5.743B
+F,Ford Motor Company,12.08,-0.03,49.003M,48.001B
+CLSK,"CleanSpark, Inc.",17.25,+1.30,31.119M,3.931B
+AMD,"Advanced Micro Devices, Inc.",160.24,+1.28,56.957M,258.998B
+ITUB,Itaú Unibanco Holding S.A.,5.87,-0.01,16.715M,57.482B
+INTC,Intel Corporation,30.76,-0.16,49.443M,130.941B
+ORCL,Oracle Corporation,140.38,+16.50,7.586M,385.836B
+AAL,American Airlines Group Inc.,11.50,+0.22,32.772M,7.686B
+SIRI,Sirius XM Holdings Inc.,2.6350,+0.0750,20.655M,10.136B
+PLTR,Palantir Technologies Inc.,23.77,-0.08,42.803M,51.335B
+BAC,Bank of America Corporation,39.41,+0.55,37.54M,308.201B
+ABEV,Ambev S.A.,2.0800,-0.0500,14.497M,33.801B
+PLUG,Plug Power Inc.,2.9200,0.0000,33.455M,2.168B
+RIVN,"Rivian Automotive, Inc.",11.80,-0.03,38.022M,11.784B
