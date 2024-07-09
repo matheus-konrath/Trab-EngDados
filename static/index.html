@@ -69,6 +69,13 @@
         tr:nth-child(even) {
             background-color: #2e2e2e;
         }
+        #chart-container {
+            margin-top: 20px;
+            background-color: #2e2e2e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -93,7 +100,11 @@
         <tbody id="stock-data">
         </tbody>
     </table>
+    <div id="chart-container">
+        <canvas id="stock-chart"></canvas>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="teste.js"></script>
 </body>
 </html>
