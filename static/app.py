@@ -1,13 +1,15 @@
 from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import CORS
 import mysql.connector
 import ativos
 
 app = Flask(__name__)
+CORS(app) 
 
 # Configuração do banco de dados
 db_config = {
     'user': 'root',          # seu usuário do MySQL
-    'password': '27082001',  # sua senha do MySQL
+    'password': '27082001M@t',  # sua senha do MySQL
     'host': '127.0.0.1',
     'database': 'stock_data'
 }
@@ -16,7 +18,7 @@ def save_user_choice(empresa, data, preco):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO stock (empresa, data, preco) VALUES (%s, %s, %s)", (empresa, data, preco))
+        cursor.execute("INSERT INTO stocks (empresa, data, preco) VALUES (%s, %s, %s)", (empresa, data, preco))
         conn.commit()
         cursor.close()
         conn.close()
