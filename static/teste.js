@@ -1,67 +1,118 @@
 function renderChart(data) {
-    const ctx = document.getElementById('stock-chart').getContext('2d');
-    
-    const labels = data.precos.map(entry => entry.data);
-    const prices = data.precos.map(entry => parseFloat(entry.preco).toFixed(2));
+  const ctx = document.getElementById("stock-chart").getContext("2d");
 
-    // Configurar os dados do gráfico
-    const chartData = {
-        labels: labels,
-        datasets: [{
-            label: `${data.empresa} Price`,
-            data: prices,
-            backgroundColor: 'rgba(0, 123, 255, 0.5)',
-            borderColor: 'rgba(0, 123, 255, 1)',
-            borderWidth: 1
-        }]
-    };
+  const historicalLabels = data.historico.map((entry) => entry.data);
+  const historicalPrices = data.historico.map((entry) =>
+    parseFloat(entry.preco).toFixed(2)
+  );
 
-    const chartOptions = {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    };
+  const predictionLabels = data.previsoes.map((entry) => entry.data);
+  const predictionPrices = data.previsoes.map((entry) =>
+    parseFloat(entry.preco).toFixed(2)
+  );
 
-    // Destruir o gráfico anterior se ele existir
-    if (window.stockChart) {
-        window.stockChart.destroy();
-    }
+  const labels = historicalLabels.concat(predictionLabels);
+  const prices = historicalPrices.concat(predictionPrices);
 
-    // Criar o novo gráfico
-    window.stockChart = new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: chartOptions
-    });
+  const chartData = {
+    labels: labels,
+    datasets: [
+      {
+        label: `${data.empresa} Historical Prices`,
+        data: historicalPrices,
+        backgroundColor: "rgba(0, 123, 255, 0.5)",
+        borderColor: "rgba(0, 123, 255, 1)",
+        borderWidth: 1,
+      },
+      {
+        label: `${data.empresa} Predicted Prices`,
+        data: new Array(historicalPrices.length)
+          .fill(null)
+          .concat(predictionPrices),
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+        borderDash: [5, 5],
+      },
+    ],
+  };
+
+  const chartOptions = {
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+    },
+    plugins: {
+      annotation: {
+        annotations: {
+          line1: {
+            type: "line",
+            xMin: historicalLabels.length,
+            xMax: historicalLabels.length,
+            borderColor: "red",
+            borderWidth: 2,
+            label: {
+              content: "Início da Previsão",
+              enabled: true,
+              position: "top",
+            },
+          },
+        },
+      },
+    },
+  };
+
+  if (window.stockChart) {
+    window.stockChart.destroy();
+  }
+
+  window.stockChart = new Chart(ctx, {
+    type: "line",
+    data: chartData,
+    options: chartOptions,
+  });
 }
 
-document.getElementById('stock-form').addEventListener('submit', function(event) {
+document
+  .getElementById("stock-form")
+  .addEventListener("submit", function (event) {
     event.preventDefault();
-    const empresa = document.getElementById('empresa').value;
-    const data = document.getElementById('data').value;
+    const empresa = document.getElementById("empresa").value;
+    const dataInicio = document.getElementById("data-inicio").value;
+    const dataFim = document.getElementById("data-fim").value;
 
-    fetch(`http://localhost:5000/precos?empresa=${empresa}&data=${data}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data); // Verifique se os dados são exibidos corretamente no console
-            const tableBody = document.getElementById('stock-data');
-            tableBody.innerHTML = ''; // Limpa os resultados anteriores
-            const row = document.createElement('tr');
-            const precoFormatado = data.precos.length > 0 ? parseFloat(data.precos[data.precos.length - 1].preco).toFixed(2) : "N/A";
-            row.innerHTML = `
-                <td>${data.precos.length > 0 ? data.precos[data.precos.length - 1].data : 'N/A'}</td>
+    fetch(
+      `http://localhost:5000/prever?empresa=${empresa}&start=${dataInicio}&end=${dataFim}`
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok " + response.statusText);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        const tableBody = document.getElementById("stock-data");
+        tableBody.innerHTML = "";
+        const row = document.createElement("tr");
+        const precoFormatado =
+          data.previsoes.length > 0
+            ? parseFloat(
+                data.previsoes[data.previsoes.length - 1].preco
+              ).toFixed(2)
+            : "N/A";
+        row.innerHTML = `
+                <td>${
+                  data.previsoes.length > 0
+                    ? data.previsoes[data.previsoes.length - 1].data
+                    : "N/A"
+                }</td>
                 <td>${data.empresa}</td>
                 <td>${precoFormatado}</td>
             `;
-            tableBody.appendChild(row);
-            renderChart(data); // Chama a função para renderizar o gráfico
-        })
-        .catch(error => console.error('Fetch error:', error));
-});
+        tableBody.appendChild(row);
+        renderChart(data);
+      })
+      .catch((error) => console.error("Fetch error:", error));
+  });

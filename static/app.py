@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
+from prophet import Prophet
+import yfinance as yf
 import mysql.connector
 import ativos
 
@@ -48,6 +50,39 @@ def index():
 @app.route('/<path:path>')
 def static_files(path):
     return send_from_directory('.', path)
+
+# Nova rota para previsão
+@app.route('/prever', methods=['GET'])
+def prever():
+    empresa = request.args.get('empresa')
+    start_date = request.args.get('start')
+    end_date = request.args.get('end')
+    
+    # Obtendo dados históricos da ação
+    df = yf.download(empresa, start=start_date, end=end_date)
+    df.reset_index(inplace=True)
+    df = df[['Date', 'Close']]
+    df.columns = ['ds', 'y']
+    
+    # Ajustando o modelo Prophet
+    model = Prophet()
+    model.fit(df)
+    
+    # Criando dataframe para previsões futuras
+    future = model.make_future_dataframe(periods=7)  # Prever para os próximos 30 dias
+    forecast = model.predict(future)
+
+    
+    # Convertendo previsões para o formato JSON
+    previsoes = forecast[['ds', 'yhat']].tail(7).to_dict(orient='records')
+    previsoes = [{'data': str(item['ds'].date()), 'preco': item['yhat']} for item in previsoes]
+    
+    # Incluindo dados históricos no resultado
+    historico = df[['ds', 'y']].to_dict(orient='records')
+    historico = [{'data': str(item['ds'].date()), 'preco': item['y']} for item in historico]
+    
+    return jsonify({'empresa': empresa, 'historico': historico, 'previsoes': previsoes})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
