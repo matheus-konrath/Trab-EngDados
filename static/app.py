@@ -51,7 +51,6 @@ def index():
 def static_files(path):
     return send_from_directory('.', path)
 
-# Nova rota para previsão
 @app.route('/prever', methods=['GET'])
 def prever():
     empresa = request.args.get('empresa')
@@ -69,20 +68,19 @@ def prever():
     model.fit(df)
     
     # Criando dataframe para previsões futuras
-    future = model.make_future_dataframe(periods=7)  # Prever para os próximos 30 dias
+    future = model.make_future_dataframe(periods=30)  # Prever para os próximos 30 dias
     forecast = model.predict(future)
-
+    
+    # Concatenando dados históricos com previsões
+    df_forecast = forecast[['ds', 'yhat']].tail(30)
+    df_forecast.columns = ['ds', 'y']
+    df_combined = pd.concat([df, df_forecast])
     
     # Convertendo previsões para o formato JSON
-    previsoes = forecast[['ds', 'yhat']].tail(7).to_dict(orient='records')
-    previsoes = [{'data': str(item['ds'].date()), 'preco': item['yhat']} for item in previsoes]
+    previsoes = df_combined.to_dict(orient='records')
+    previsoes = [{'data': str(item['ds'].date()), 'preco': item['y']} for item in previsoes]
     
-    # Incluindo dados históricos no resultado
-    historico = df[['ds', 'y']].to_dict(orient='records')
-    historico = [{'data': str(item['ds'].date()), 'preco': item['y']} for item in historico]
-    
-    return jsonify({'empresa': empresa, 'historico': historico, 'previsoes': previsoes})
-
+    return jsonify({'empresa': empresa, 'previsoes': previsoes})
 
 if __name__ == '__main__':
     app.run(debug=True)
