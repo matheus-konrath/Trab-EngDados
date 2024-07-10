@@ -4,6 +4,7 @@ from prophet import Prophet
 import yfinance as yf
 import mysql.connector
 import ativos
+import pandas as pd
 
 app = Flask(__name__)
 CORS(app) 
@@ -68,11 +69,11 @@ def prever():
     model.fit(df)
     
     # Criando dataframe para previsões futuras
-    future = model.make_future_dataframe(periods=30)  # Prever para os próximos 30 dias
+    future = model.make_future_dataframe(periods=7)  # Prever para os próximos 30 dias
     forecast = model.predict(future)
     
     # Concatenando dados históricos com previsões
-    df_forecast = forecast[['ds', 'yhat']].tail(30)
+    df_forecast = forecast[['ds', 'yhat']].tail(7)
     df_forecast.columns = ['ds', 'y']
     df_combined = pd.concat([df, df_forecast])
     
