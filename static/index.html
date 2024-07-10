@@ -86,33 +86,32 @@
   <body>
     <h1>Stock Prices</h1>
     <div class="form-container">
-        <form id="stock-form">
-            <label for="empresa">Empresa:</label>
-            <input type="text" id="empresa" name="empresa" required>
-            <label for="data-inicio">Data de início (YYYY-MM-DD):</label>
-            <input type="date" id="data-inicio" name="data-inicio" required>
-            <label for="data-fim">Data de fim (YYYY-MM-DD):</label>
-            <input type="date" id="data-fim" name="data-fim" required>
-            <button type="submit">Buscar</button>
-        </form>
+      <form id="stock-form">
+        <label for="empresa">Empresa:</label>
+        <input type="text" id="empresa" name="empresa" required />
+        <label for="data-inicio">Data de início (YYYY-MM-DD):</label>
+        <input type="date" id="data-inicio" name="data-inicio" required />
+        <label for="data-fim">Data de fim (YYYY-MM-DD):</label>
+        <input type="date" id="data-fim" name="data-fim" required />
+        <button type="submit">Buscar</button>
+      </form>
     </div>
     <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Company</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody id="stock-data">
-        </tbody>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Company</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody id="stock-data"></tbody>
     </table>
     <div id="chart-container">
-        <canvas id="stock-chart"></canvas>
+      <canvas id="stock-chart"></canvas>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2"></script>
     <script src="teste.js"></script>
-</body>
+  </body>
 </html>
