@@ -41,4 +41,4 @@ git clone https://github.com/matheus-konrath/Trab-EngDados.git
 
 
 # Autor
-Matheus Konrath
+Matheus Konrath & Douglas Costa
